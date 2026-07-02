@@ -13,9 +13,11 @@ export const settingSlice = createSlice({
       // オブジェクトが渡された場合は、既存のstateにマージする
       Object.assign(state, payload);
     },
-    // 将来的には、特定のアクション（例：addIncome, removeAccountなど）をここに追加していきます
+    resetSettings: () => {
+      return makeDefault();
+    }
   }
 });
 
-export const { updateSettings } = settingSlice.actions;
+export const { updateSettings, resetSettings } = settingSlice.actions;
 export default settingSlice.reducer;

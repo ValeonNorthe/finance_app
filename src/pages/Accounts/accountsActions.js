@@ -4,7 +4,7 @@ export const addAccount = (set) => {
     ...p,
     accounts: [
       ...p.accounts,
-      { id, type: "living", label: "新規口座", balance: 0, monthly: 0 }
+      { id, type: "living", label: "口座を追加", balance: 0, monthly: 0, startAge: 30, endAge: 65 }
     ]
   }));
 };

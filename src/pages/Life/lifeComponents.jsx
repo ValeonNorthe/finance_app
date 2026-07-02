@@ -74,6 +74,7 @@ export function ChildDetail({ child, updateChildField }) {
           <input
             value={child.name}
             onChange={e => updateChildField("name", e.target.value)}
+            onFocus={e => e.target.select()}
             style={{ width: "100%" }}
           />
         </div>
@@ -101,6 +102,15 @@ export function ChildDetail({ child, updateChildField }) {
           suffix="円"
           step={10_000}
           onChange={v => updateChildField("annualChildcareCost", v)}
+        />
+
+        <Sl
+          label="自立年齢（支援終了）"
+          min={15}
+          max={30}
+          value={child.independenceAge !== undefined ? child.independenceAge : 22}
+          onChange={v => updateChildField("independenceAge", v)}
+          unit="歳"
         />
       </div>
 
@@ -209,6 +219,7 @@ export function MarriageSection({ st, set, currentAge, updateLifeField }) {
               <input
                 value={st.partnerName || ""}
                 onChange={e => updateLifeField(set, "partnerName", e.target.value)}
+                onFocus={e => e.target.select()}
                 placeholder="山田 花子"
                 style={{ width: "100%" }}
               />

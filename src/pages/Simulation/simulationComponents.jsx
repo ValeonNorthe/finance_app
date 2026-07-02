@@ -25,15 +25,12 @@ export function ScenarioBox({ label, value, color }) {
   );
 }
 
-export function ScenarioSummary({ finalNominal, riskRate }) {
-  const optimistic = finalNominal * (1 + riskRate / 100);
-  const pessimistic = finalNominal * (1 - riskRate / 100);
-
+export function ScenarioSummary({ finalNominal, optimistic, pessimistic, sigmaLevel, riskRate }) {
   return (
     <div>
-      <ScenarioBox label="楽観（+1σ）" value={optimistic} color="#1baf7a" />
+      <ScenarioBox label={`楽観（+${sigmaLevel}σ）`} value={optimistic} color="#1baf7a" />
       <ScenarioBox label="基本予測" value={finalNominal} color="#2a78d6" />
-      <ScenarioBox label="悲観（−1σ）" value={pessimistic} color="#e34948" />
+      <ScenarioBox label={`悲観（−${sigmaLevel}σ）`} value={pessimistic} color="#e34948" />
 
       <div
         style={{
@@ -44,7 +41,7 @@ export function ScenarioSummary({ finalNominal, riskRate }) {
           paddingTop: 8,
         }}
       >
-        期待リターン {riskRate.toFixed(1)}% / リスク ±{riskRate.toFixed(1)}%
+        期待リターン {riskRate.toFixed(1)}% / リスク ±{(riskRate * sigmaLevel).toFixed(1)}%
       </div>
     </div>
   );

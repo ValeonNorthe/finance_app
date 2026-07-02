@@ -31,6 +31,10 @@ export const SimulationTab = ({ st, set }) => {
 
   const u = (key, value) => updateSimulationField(set, key, value);
 
+  const lastData = simData.at(-1);
+  const optimisticFinal = lastData?.optimistic ?? 0;
+  const pessimisticFinal = lastData?.pessimistic ?? 0;
+
   const chartData = simData
     .filter((_, i) => i % Math.max(1, Math.floor(st.goalYears / 12)) === 0 || i === simData.length - 1)
     .map((d) => ({
@@ -100,14 +104,73 @@ export const SimulationTab = ({ st, set }) => {
             step={1_000_000}
             onChange={(v) => u("goalAmount", v)}
           />
-          <Sl
-            label="シミュレーション期間"
-            min={5}
-            max={60}
-            value={st.goalYears}
-            onChange={(v) => u("goalYears", v)}
-            unit="年"
-          />
+
+          <div style={{ marginBottom: 12 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", marginBottom: 6 }}>
+              期間指定方法
+            </div>
+            <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+              <button
+                type="button"
+                className={`tab-button ${!st.simulationEndType || st.simulationEndType === "years" ? "active" : ""}`}
+                style={{ flex: 1, padding: "6px 12px", fontSize: 12 }}
+                onClick={() => u("simulationEndType", "years")}
+              >
+                年数で指定
+              </button>
+              <button
+                type="button"
+                className={`tab-button ${st.simulationEndType === "date" ? "active" : ""}`}
+                style={{ flex: 1, padding: "6px 12px", fontSize: 12 }}
+                onClick={() => {
+                  u("simulationEndType", "date");
+                  if (!st.simulationEndDate) {
+                    const d = new Date();
+                    d.setFullYear(d.getFullYear() + 30);
+                    u("simulationEndDate", d.toISOString().split('T')[0]);
+                  }
+                }}
+              >
+                日付で指定
+              </button>
+            </div>
+
+            {(!st.simulationEndType || st.simulationEndType === "years") ? (
+              <Sl
+                label="シミュレーション期間"
+                min={5}
+                max={60}
+                value={st.goalYears}
+                onChange={(v) => u("goalYears", v)}
+                unit="年"
+              />
+            ) : (
+              <div style={{ marginBottom: 10 }}>
+                <div style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 4 }}>
+                  終了日付
+                </div>
+                <input
+                  type="date"
+                  value={st.simulationEndDate || ""}
+                  onChange={(e) => {
+                    const dateVal = e.target.value;
+                    u("simulationEndDate", dateVal);
+                    if (dateVal) {
+                      const curYear = new Date().getFullYear();
+                      const targetYear = new Date(dateVal).getFullYear();
+                      const diff = Math.max(5, Math.min(60, targetYear - curYear));
+                      u("goalYears", diff);
+                    }
+                  }}
+                  style={{ width: "100%", height: 38 }}
+                />
+                <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 4 }}>
+                  → 現在から約 {st.goalYears} 年間のシミュレーションになります
+                </div>
+              </div>
+            )}
+          </div>
+
           <Sl
             label="インフレ率"
             min={0}
@@ -126,6 +189,25 @@ export const SimulationTab = ({ st, set }) => {
             onChange={(v) => u("inflationRiskRate", v)}
             unit="%"
           />
+
+          <div style={{ marginTop: 12 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: "var(--text-secondary)", marginBottom: 6 }}>
+              シナリオ信頼度（σレベル）
+            </div>
+            <div style={{ display: "flex", gap: 8 }}>
+              {[1, 2, 3].map(s => (
+                <button
+                  key={s}
+                  type="button"
+                  className={`tab-button ${ (st.sigmaLevel || 1) === s ? "active" : ""}`}
+                  style={{ flex: 1, padding: "6px 12px", fontSize: 12 }}
+                  onClick={() => u("sigmaLevel", s)}
+                >
+                  ±{s}σ ({(s === 1 ? 68.2 : s === 2 ? 95.4 : 99.7)}%)
+                </button>
+              ))}
+            </div>
+          </div>
         </Card>
 
         <Card>
@@ -158,10 +240,16 @@ export const SimulationTab = ({ st, set }) => {
               marginBottom: 10,
             }}
           >
-            シナリオ比較
+            シナリオ比較（最終年）
           </div>
 
-          <ScenarioSummary finalNominal={finalNominal} riskRate={riskRate} />
+          <ScenarioSummary 
+            finalNominal={finalNominal} 
+            optimistic={optimisticFinal} 
+            pessimistic={pessimisticFinal} 
+            sigmaLevel={st.sigmaLevel || 1}
+            riskRate={riskRate} 
+          />
         </Card>
       </div>
 

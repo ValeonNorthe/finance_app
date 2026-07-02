@@ -58,6 +58,7 @@ export const AccountsTab = ({ st, set }) => {
               <input
                 value={acc.label}
                 onChange={e => updateAccountField(set, acc.id, "label", e.target.value)}
+                onFocus={e => e.target.select()}
                 style={{ flex: 1, fontSize: 12 }}
                 placeholder="口座名"
               />
@@ -66,6 +67,7 @@ export const AccountsTab = ({ st, set }) => {
                 type="number"
                 value={acc.balance}
                 onChange={e => updateAccountField(set, acc.id, "balance", Number(e.target.value))}
+                onFocus={e => e.target.select()}
                 style={{ width: 100, fontSize: 12 }}
                 placeholder="残高"
               />
@@ -75,10 +77,31 @@ export const AccountsTab = ({ st, set }) => {
                 type="number"
                 value={acc.monthly}
                 onChange={e => updateAccountField(set, acc.id, "monthly", Number(e.target.value))}
+                onFocus={e => e.target.select()}
                 style={{ width: 80, fontSize: 12 }}
                 placeholder="月積立"
               />
-              <span style={{ fontSize: 11, color: "var(--text-muted)" }}>円/月</span>
+              <span style={{ fontSize: 11, color: "var(--text-muted)", marginRight: 4 }}>円/月</span>
+
+              <span style={{ fontSize: 11, color: "var(--text-muted)" }}>積立期間:</span>
+              <input
+                type="number"
+                value={acc.startAge !== undefined ? acc.startAge : 30}
+                onChange={e => updateAccountField(set, acc.id, "startAge", Number(e.target.value))}
+                onFocus={e => e.target.select()}
+                style={{ width: 42, height: 32, fontSize: 12, padding: "0 4px", textAlign: "center", minWidth: 42 }}
+                placeholder="開始"
+              />
+              <span style={{ fontSize: 11, color: "var(--text-muted)" }}>〜</span>
+              <input
+                type="number"
+                value={acc.endAge !== undefined ? acc.endAge : 65}
+                onChange={e => updateAccountField(set, acc.id, "endAge", Number(e.target.value))}
+                onFocus={e => e.target.select()}
+                style={{ width: 42, height: 32, fontSize: 12, padding: "0 4px", textAlign: "center", minWidth: 42 }}
+                placeholder="終了"
+              />
+              <span style={{ fontSize: 11, color: "var(--text-muted)" }}>歳</span>
 
               <button
                 onClick={() => removeAccount(set, acc.id)}

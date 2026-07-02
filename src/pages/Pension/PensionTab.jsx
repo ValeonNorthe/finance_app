@@ -1,11 +1,11 @@
-import { selectTotalMonthlyPension } from "../Pension/pensionSelectors";
+import { selectTotalMonthlyPension } from "./pensionSelectors";
 import {
   addPensionRecord,
   updatePensionRecord,
   removePensionRecord,
-} from "../Pension/pensionActions";
+} from "./pensionActions";
 
-import { PensionRow, PensionDetailForm } from "../Pension/pensionComponents";
+import { PensionRow, PensionDetailForm } from "./pensionComponents";
 import { Card } from "../../components/common/Card.jsx";
 import { Metric } from "../../components/common/Metric.jsx";
 import { Sl } from "../../components/common/Slider.jsx";
@@ -16,7 +16,7 @@ import { PENSION_TYPES } from "../../constants/appData";
 export const PensionTab = ({ st, set }) => {
   const [activeP, setActiveP] = useState(null);
 
-  const totalMonthly = selectTotalMonthlyPension(st.pensionRecords);
+  const totalMonthly = selectTotalMonthlyPension(st.pensionRecords, st.pensionStartAge);
 
   return (
     <div>

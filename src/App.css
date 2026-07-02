@@ -77,7 +77,8 @@ body {
 
 .tab-list {
   display: flex;
-  gap: 4px;
+  flex-wrap: wrap;
+  gap: 6px;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }

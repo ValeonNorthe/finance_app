@@ -214,3 +214,39 @@ export const selectAccountChartData = createSelector(
         return row;
       })
 );
+
+export const selectMonthlyCashflowData = createSelector(
+  [selectSettings, selectTaxResult],
+  (st, taxResult) => {
+    const monthlyTH = Math.round(taxResult.takehome / 12);
+    const fixed = Object.values(st.monthlyFixed).reduce((a, b) => a + b, 0);
+    const variable = Object.keys(st.monthlyVariable)
+      .filter(key => key !== "health")
+      .reduce((a, key) => a + st.monthlyVariable[key], 0);
+
+    const annualMedical = (
+      (st.medical?.regular || 0) +
+      (st.medical?.emergency || 0) +
+      (st.medical?.checkup || 0) +
+      (st.medical?.dental || 0)
+    );
+    const monthlyMedical = Math.round(annualMedical / 12);
+
+    const invest = st.accounts.reduce((sum, a) => sum + (a.monthly || 0), 0);
+    const totalExpAndInvest = fixed + variable + monthlyMedical + invest;
+    const surplus = monthlyTH - totalExpAndInvest;
+
+    return [
+      {
+        name: "収入と支出のバランス",
+        "手取り月収": monthlyTH,
+        "固定費": fixed,
+        "変動費": variable,
+        "医療費": monthlyMedical,
+        "投資額": invest,
+        "貯蓄余剰": surplus > 0 ? surplus : 0,
+        "赤字": surplus < 0 ? Math.abs(surplus) : 0,
+      }
+    ];
+  }
+);

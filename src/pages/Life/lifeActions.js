@@ -10,7 +10,8 @@ export const addChild = (set, count) => {
     birthYear: 3,
     eduPattern: 0,
     birthCost: 500_000,
-    annualChildcareCost: 300_000
+    annualChildcareCost: 300_000,
+    independenceAge: 22
   };
 
   set(prev => ({

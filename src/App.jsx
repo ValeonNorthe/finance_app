@@ -1,6 +1,6 @@
 import { useState, useCallback, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { updateSettings } from "./store/settingSlice";
+import { updateSettings, resetSettings } from "./store/settingSlice";
 import {
   selectSettings,
   selectCurrentAge,
@@ -73,8 +73,30 @@ export default function App() {
             <i className="ti ti-chart-line" style={{ color: "var(--primary)", fontSize: 26 }} />
             {st.name ? `${st.name}の` : ""}資産ライフプランシミュレーター
           </h1>
-          <div style={{ background: "var(--bg-card)", padding: "6px 14px", borderRadius: 8, border: "1px solid var(--border)", fontSize: 13, fontWeight: 700 }}>
-            現在地: {currentAge}歳
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <div style={{ background: "var(--bg-card)", padding: "6px 14px", borderRadius: 8, border: "1px solid var(--border)", fontSize: 13, fontWeight: 700 }}>
+              現在地: {currentAge}歳
+            </div>
+            <button 
+              onClick={() => {
+                if (window.confirm("すべての入力・設定データを初期状態にリセットしますか？")) {
+                  dispatch(resetSettings());
+                }
+              }}
+              style={{
+                background: "none",
+                border: "1px solid #ef4444",
+                color: "#ef4444",
+                padding: "6px 12px",
+                borderRadius: 8,
+                fontSize: 12,
+                fontWeight: 600,
+                cursor: "pointer",
+                transition: "all 0.15s"
+              }}
+            >
+              <i className="ti ti-rotate" style={{ marginRight: 4 }} />設定リセット
+            </button>
           </div>
         </div>
 

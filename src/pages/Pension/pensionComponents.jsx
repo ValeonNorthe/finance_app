@@ -4,6 +4,7 @@ import { fmt,fmtSmart } from "../../utils/format";
 import { Card } from "../../components/common/Card.jsx";
 import { Metric } from "../../components/common/Metric.jsx";
 import { Sl } from "../../components/common/Slider.jsx";
+import { NumInput } from "../../components/common/NumberInput.jsx";
 import { useState } from "react";
 import { addPensionRecord, updatePensionRecord, removePensionRecord } from "./pensionActions";
 export function PensionRow({ rec, active, onToggle, onRemove }) {
@@ -84,6 +85,7 @@ export function PensionDetailForm({ rec, onUpdate }) {
           <input
             value={rec.label}
             onChange={(e) => onUpdate("label", e.target.value)}
+            onFocus={(e) => e.target.select()}
             style={{ width: "100%" }}
           />
         </div>
@@ -120,6 +122,7 @@ export function PensionDetailForm({ rec, onUpdate }) {
           <input
             value={rec.payYears}
             onChange={(e) => onUpdate("payYears", e.target.value)}
+            onFocus={(e) => e.target.select()}
             placeholder="例: 22〜60歳"
             style={{ width: "100%" }}
           />

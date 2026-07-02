@@ -1,4 +1,5 @@
 import { NumInput } from "../../components/common/NumberInput.jsx";
+import { Sl } from "../../components/common/Slider.jsx";
 import { INCOME_TYPES } from "../../constants/appData";
 import { fmtSmart } from "../../utils/format";
 
@@ -71,6 +72,7 @@ export function IncomeEditor({ inc, active, onToggle, onUpdate, onRemove }) {
               <input
                 value={inc.label}
                 onChange={e => onUpdate("label", e.target.value)}
+                onFocus={e => e.target.select()}
                 style={{ width: "100%" }}
               />
             </div>
@@ -98,6 +100,25 @@ export function IncomeEditor({ inc, active, onToggle, onUpdate, onRemove }) {
             suffix="円"
             step={100_000}
           />
+
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <Sl
+              label="開始年齢"
+              min={20}
+              max={100}
+              value={inc.startAge !== undefined ? inc.startAge : 30}
+              onChange={v => onUpdate("startAge", v)}
+              unit="歳"
+            />
+            <Sl
+              label="終了年齢"
+              min={20}
+              max={100}
+              value={inc.endAge !== undefined ? inc.endAge : 65}
+              onChange={v => onUpdate("endAge", v)}
+              unit="歳"
+            />
+          </div>
 
           {inc.type === "sole" && (
             <div style={{ padding: "6px 10px", background: "var(--bg-success)", borderRadius: "var(--radius)", fontSize: 11, color: "var(--text-success)" }}>

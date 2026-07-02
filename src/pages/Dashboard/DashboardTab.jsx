@@ -8,9 +8,10 @@ import {
   selectChartData,
   selectPieData,
   selectAccChartData,
+  selectMonthlyCashflowData,
 } from "../../store/simulationSelectors";
 
-import { AssetChart, AllocationChart, AccountChart } from "./dashboardCharts";
+import { AssetChart, AllocationChart, AccountChart, MonthlyCashflowChart } from "./dashboardCharts";
 
 export const DashboardTab = () => {
   const st = useSelector(selectSettings);
@@ -30,6 +31,7 @@ export const DashboardTab = () => {
   const chartData = useSelector(selectChartData);
   const pieData = useSelector(selectPieData);
   const accChartData = useSelector(selectAccChartData);
+  const monthlyCfData = useSelector(selectMonthlyCashflowData);
 
   return (
     <div>
@@ -57,7 +59,9 @@ export const DashboardTab = () => {
         <AllocationChart pieData={pieData} />
       </div>
 
-      <Card title="月次キャッシュフロー概要" style={{ marginBottom: 14 }} />
+      <Card title="月次キャッシュフロー概要" style={{ marginBottom: 14 }}>
+        <MonthlyCashflowChart data={monthlyCfData} />
+      </Card>
 
       <AccountChart accChartData={accChartData} goalAmount={st.goalAmount} />
     </div>

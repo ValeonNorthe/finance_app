@@ -9,7 +9,7 @@ export const makeDefault = () => ({
   inflationRiskRate: 1.0,
 
   incomes: [
-    { id: "inc1", label: "本業（会社員）", type: "employee", amount: 4_800_000, active: true },
+    { id: "inc1", label: "本業（会社員）", type: "employee", amount: 4_800_000, active: true, startAge: 30, endAge: 65 },
   ],
   socialInsurance: 0,
   dependents: 0,
@@ -58,10 +58,10 @@ export const makeDefault = () => ({
   ],
 
   accounts: [
-    { id: "acc1", type: "nisa",     label: "NISA口座",     balance: 500_000, monthly: 33_333 },
-    { id: "acc2", type: "ideco",    label: "iDeCo",        balance: 200_000, monthly: 23_000 },
-    { id: "acc3", type: "living",   label: "生活費用口座", balance: 1_000_000, monthly: 0 },
-    { id: "acc4", type: "emergency",label: "生活防衛費",   balance: 3_000_000, monthly: 0 },
+    { id: "acc1", type: "nisa",     label: "NISA口座",     balance: 500_000, monthly: 33_333, startAge: 30, endAge: 65 },
+    { id: "acc2", type: "ideco",    label: "iDeCo",        balance: 200_000, monthly: 23_000, startAge: 30, endAge: 65 },
+    { id: "acc3", type: "living",   label: "生活費用口座", balance: 1_000_000, monthly: 0, startAge: 30, endAge: 100 },
+    { id: "acc4", type: "emergency",label: "生活防衛費",   balance: 3_000_000, monthly: 0, startAge: 30, endAge: 100 },
   ],
 
   married: false,
@@ -84,4 +84,7 @@ export const makeDefault = () => ({
     { id: "p1", type: "kiso",  label: "基礎年金", startAge: 65, endAge: 90, monthlyAmount: 66_250, payYears: "20〜64歳" },
     { id: "p2", type: "kosei", label: "厚生年金", startAge: 65, endAge: 90, monthlyAmount: 120_000, payYears: "22〜60歳" },
   ],
+  sigmaLevel: 1,
+  simulationEndType: "years",
+  simulationEndDate: "",
 });

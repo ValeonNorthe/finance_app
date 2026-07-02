@@ -4,7 +4,7 @@ export const addIncome = (set, setActiveInc) => {
     ...p,
     incomes: [
       ...p.incomes,
-      { id, label: "収入を追加", type: "employee", amount: 3_000_000, active: true }
+      { id, label: "収入を追加", type: "employee", amount: 3_000_000, active: true, startAge: 30, endAge: 65 }
     ]
   }));
   setActiveInc(id);
