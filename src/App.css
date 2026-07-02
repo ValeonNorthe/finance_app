@@ -155,6 +155,26 @@ select:focus {
   transform: scale(1.01); /* ほんの少しだけ大きく見せて集中させる */
 }
 
+/* 🔢 数値入力の矢印ボタンスタイリング */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  opacity: 1;
+  height: 32px;
+  width: 16px;
+  cursor: pointer;
+}
+
+input[type="number"]::-webkit-inner-spin-button {
+  background: #f1f5f9;
+  border-radius: 4px 0 0 4px;
+  border-left: 1px solid var(--border);
+}
+
+input[type="number"]::-webkit-outer-spin-button {
+  background: #f1f5f9;
+  border-radius: 0 4px 4px 0;
+}
+
 /* ──────────────────────────────────────────────────
    🔘 4. ボタン（ホバー・クリック時の色変化）
    ────────────────────────────────────────────────── */

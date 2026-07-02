@@ -9,7 +9,7 @@ export const makeDefault = () => ({
   inflationRiskRate: 1.0,
 
   incomes: [
-    { id: "inc1", label: "本業（会社員）", type: "employee", amount: 4_800_000, active: true, startAge: 30, endAge: 65 },
+    { id: "inc1", label: "本業（会社員）", type: "employee", amount: 6_000_000, active: true, startAge: 30, endAge: 65 },
   ],
   socialInsurance: 0,
   dependents: 0,

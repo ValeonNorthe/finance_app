@@ -49,16 +49,19 @@ export function IncomeEditor({ inc, active, onToggle, onUpdate, onRemove }) {
         <button
           onClick={e => {
             e.stopPropagation();
-            onRemove();
+            if (confirm("この収入を削除しますか？")) {
+              onRemove();
+            }
           }}
           style={{
             background: "none",
             border: "none",
             cursor: "pointer",
-            color: "var(--text-muted)",
+            color: "#ef4444",
             fontSize: 16,
             padding: 4
           }}
+          title="削除"
         >
           <i className="ti ti-trash" aria-hidden="true" />
         </button>

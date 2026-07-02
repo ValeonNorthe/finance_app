@@ -41,14 +41,17 @@ export function PensionRow({ rec, active, onToggle, onRemove }) {
       <button
         onClick={(e) => {
           e.stopPropagation();
-          onRemove();
+          if (confirm("この年金記録を削除しますか？")) {
+            onRemove();
+          }
         }}
         style={{
           background: "none",
           border: "none",
           cursor: "pointer",
-          color: "var(--text-muted)",
+          color: "#ef4444",
         }}
+        title="削除"
       >
         <i className="ti ti-trash" />
       </button>

@@ -34,15 +34,18 @@ export function ChildCard({ child, activeChild, setActiveChild, birthAge, eduPat
       <button
         onClick={e => {
           e.stopPropagation();
-          removeChild();
+          if (confirm("この子供のデータを削除しますか？")) {
+            removeChild();
+          }
         }}
         style={{
           background: "none",
           border: "none",
           cursor: "pointer",
-          color: "var(--text-muted)",
+          color: "#ef4444",
           fontSize: 16
         }}
+        title="削除"
       >
         <i className="ti ti-trash" aria-hidden="true" />
       </button>

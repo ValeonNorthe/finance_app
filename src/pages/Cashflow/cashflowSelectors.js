@@ -19,7 +19,7 @@ export const selectCashflowSummary = (st) => {
   const monthlyMedical = annualMedical / 12;
 
   const totalExp = monthlyFixed + monthlyVar + monthlyMedical;
-  const surplus = monthlyTH - totalExp;
+  const surplus = monthlyTH - totalExp - (st.monthlyInvest || 0);
 
   const creditBack = totalExp * st.creditCardRate / 100;
   const pointBack = totalExp * st.pointRate / 100;

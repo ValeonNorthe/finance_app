@@ -316,13 +316,29 @@ export const simulateWealth = (st, years) => {
 
     const cashflow = Math.round((monthlyTH - monthlyExp) * 12 + annualPension - annualMedical - eventCost);
 
+    // Fix optimistic/pessimistic reversal when assets are negative
+    // When negative: optimistic should be less negative (closer to 0), pessimistic should be more negative
+    const baseOptimistic = Math.round(totalAssetsOptimistic);
+    const basePessimistic = Math.round(totalAssetsPessimistic * Math.pow(1 - inflRisk, yr));
+    
+    let optimistic, pessimistic;
+    if (totalAssetsNominal < 0) {
+      // When negative, swap so optimistic is higher (less negative)
+      optimistic = Math.max(baseOptimistic, basePessimistic);
+      pessimistic = Math.min(baseOptimistic, basePessimistic);
+    } else {
+      // When positive, optimistic is higher
+      optimistic = baseOptimistic;
+      pessimistic = basePessimistic;
+    }
+
     data.push({
       year: yr,
       age,
       nominal: Math.round(totalAssetsNominal),
       real: Math.round(totalAssetsNominal / inflAdj),
-      pessimistic: Math.round(totalAssetsPessimistic * Math.pow(1 - inflRisk, yr)),
-      optimistic: Math.round(totalAssetsOptimistic),
+      pessimistic,
+      optimistic,
       cashflow,
       eventCost: Math.round(eventCost),
       takehome: Math.round(takehome),
