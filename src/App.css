@@ -1,0 +1,250 @@
+:root {
+  /* 視認性の高いカラーパレット（アクセントをより明瞭に） */
+  --primary: #0056b3;       /* メインの濃い青 */
+  --primary-hover: #004085; /* ホバー時のさらに濃い青 */
+  --primary-active: #002d62;/* クリックした瞬間の超濃い青 */
+  --primary-light: #e6f0fa; /* 選択中カードの薄い背景色 */
+  
+  --text-main: #1e293b;     /* メイン文字（ほぼ黒） */
+  --text-muted: #64748b;    /* 補足文字（グレー） */
+  --bg-app: #f1f5f9;        /* アプリ全体の背景（少しグレーにして白カードを際立たせる） */
+  --bg-card: #ffffff;       /* カード・入力欄の背景（純白） */
+  
+  --border: #cbd5e1;        /* 通常の枠線 */
+  --border-focus: #0056b3;  /* フォーカス時の太い枠線 */
+  
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-md: 0 6px 16px rgba(0,0,0,0.08);
+  --shadow-focus: 0 0 0 4px rgba(0, 86, 179, 0.25); /* フォーカス時の青い光彩 */
+  
+  --transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ──────────────────────────────────────────────────
+   📱 1. 画面サイズへの追随（レスポンシブ・コンテナ）
+   ────────────────────────────────────────────────── */
+body {
+  background-color: var(--bg-app);
+  color: var(--text-main);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+/* 全体の幅を制御 */
+.app-container {
+  width: 120%;
+  max-width: 2500px; /* パソコンでの最大幅 */
+  margin: 0 auto;    /* 中央寄せ */
+  padding: 10px;
+  box-sizing: border-box; /* 重要：パディングを含めて幅を計算 */
+}
+
+/* 2カラムレイアウト */
+.main-layout {
+  display: grid;
+  /* 左側(1fr:残りの幅)と、右側(固定幅) */
+  grid-template-columns: 1fr 350px; 
+  gap: 24px;
+  align-items: start;
+}
+
+/* 右側パネルを固定 */
+.sticky-sidebar {
+  position: sticky;
+  top: 20px;
+}
+
+/* 必要に応じて、コンテンツがはみ出さないように設定 */
+.content-main {
+  min-width: 0; 
+}
+
+/* ──────────────────────────────────────────────────
+   ✨ 2. タブUI（現在地の圧倒的な明示化）
+   ────────────────────────────────────────────────── */
+.tab-list-wrapper {
+  width: 100%;
+  margin-bottom: 20px;
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.tab-list {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.tab-list::-webkit-scrollbar { display: none; } /* スクロールバーは非表示 */
+
+.tab-button {
+  appearance: none;
+  padding: 12px 20px; /* パソコンでもスマホでも押しやすい絶妙なサイズ */
+  font-size: 14px;
+  font-weight: 600;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: var(--transition);
+}
+
+/* 🟥 ホバー（マウスが乗ったとき）: 背景を少しグレーにして、上に浮く */
+.tab-button:hover {
+  color: var(--text-main);
+  background-color: #f1f5f9;
+  transform: translateY(-1px);
+}
+
+/* 🟩 【最重要】アクティブ（現在見ているタブ）: 濃い青背景に白文字で完全明示！ */
+.tab-button.active {
+  color: #ffffff !important;
+  background-color: var(--primary) !important;
+  box-shadow: var(--shadow-md);
+}
+
+/* ──────────────────────────────────────────────────
+   ⌨️ 3. 入力フォーム（カーソルが当たった時の劇的変化）
+   ────────────────────────────────────────────────── */
+input[type="text"],
+input[type="number"],
+input[type="date"],
+select {
+  width: 100%;
+  height: 48px; /* スマホの指に最適化したサイズ */
+  padding: 0 16px;
+  font-size: 16px; /* iOSの自動ズーム化を完全に防ぐ */
+  color: var(--text-main);
+  background-color: var(--bg-card);
+  border: 2px solid var(--border); /* 少し太くして境界をハッキリ */
+  border-radius: 10px;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+  transition: var(--transition);
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* ホバー時 */
+input[type="text"]:hover,
+input[type="number"]:hover,
+input[type="date"]:hover,
+select:hover {
+  border-color: #94a3b8;
+}
+
+/* 🟦 【最重要】フォーカス時（カーソルが当たっている、入力中） */
+input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="date"]:focus,
+select:focus {
+  border-color: var(--border-focus);
+  background-color: #ffffff;
+  box-shadow: var(--shadow-focus); /* 青い外光を放つ */
+  transform: scale(1.01); /* ほんの少しだけ大きく見せて集中させる */
+}
+
+/* ──────────────────────────────────────────────────
+   🔘 4. ボタン（ホバー・クリック時の色変化）
+   ────────────────────────────────────────────────── */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 24px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: var(--primary);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 4px 6px rgba(0, 86, 179, 0.15);
+}
+
+/* ホバー（明るい青へ） */
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 86, 179, 0.25);
+}
+
+/* アティブ（クリックした瞬間：沈み込んで濃い青へ） */
+.btn-primary:active {
+  background-color: var(--primary-active);
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 86, 179, 0.15);
+}
+
+/* ──────────────────────────────────────────────────
+   🃏 5. 選択カード（雇用形態や教育費コースを選ぶパネル）
+   ────────────────────────────────────────────────── */
+.selectable-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+
+.selectable-card:hover {
+  border-color: #94a3b8;
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+/* 🟦 選択された状態のカード（太枠・青背景化） */
+.selectable-card.active {
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+/* Input.jsx用クラス */
+.modern-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 16px;
+  font-size: 16px;
+  color: var(--text-main);
+  background-color: var(--bg-card);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  transition: var(--transition);
+  box-sizing: border-box;
+  outline: none;
+}
+
+.modern-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
+  transform: scale(1.01);
+}
+
+/* Button用クラス (既存のものを微調整) */
+.btn-secondary {
+  height: 48px;
+  padding: 0 20px;
+  background-color: #e2e8f0;
+  color: var(--text-main);
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.btn-secondary:hover { background-color: #cbd5e1; }

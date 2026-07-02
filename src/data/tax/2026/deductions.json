@@ -1,0 +1,31 @@
+{
+  "basic":580000,
+
+  "medicalExpense":200000,
+
+  "socialInsurance":true,
+
+  "lifeInsurance":120000,
+
+  "earthquakeInsurance":50000,
+
+  "spouse":380000,
+
+  "spouseSpecial":380000,
+
+  "dependent":380000,
+
+  "specificDependent":630000,
+
+  "disabled":270000,
+
+  "widow":270000,
+
+  "workingStudent":270000,
+
+  "donation":true,
+
+  "ideco":true,
+
+  "smallBusinessMutualAid":true
+}

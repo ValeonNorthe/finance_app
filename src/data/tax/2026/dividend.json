@@ -1,0 +1,18 @@
+{
+  "taxableAccounts":[
+
+    "specific",
+
+    "general"
+
+  ],
+
+  "nisa":{
+
+    "taxRate":0
+  },
+
+  "taxRate":0.20315,
+
+  "foreignTaxCredit":true
+}

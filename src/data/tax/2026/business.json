@@ -1,0 +1,13 @@
+{
+  "blueReturn":{
+
+    "electronic":650000,
+
+    "bookkeeping":550000,
+
+    "simple":100000
+
+  },
+
+  "carryForwardYears":3
+}

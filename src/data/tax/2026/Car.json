@@ -1,0 +1,17 @@
+{
+  "expenseCategories":[
+
+    "repair",
+
+    "management",
+
+    "fireInsurance",
+
+    "fixedAssetTax",
+
+    "interest",
+
+    "depreciation"
+
+  ]
+}

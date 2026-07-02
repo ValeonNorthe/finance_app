@@ -1,0 +1,21 @@
+{
+  "employee":{
+
+    "healthInsurance":0.0495,
+
+    "pension":0.0915,
+
+    "employment":0.0055,
+
+    "careInsurance":0.0091
+
+  },
+
+  "soleProprietor":{
+
+    "nationalPension":20520,
+
+    "healthInsurance":"municipality"
+
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "salary": {
+    "name": "給与所得",
+    "taxType": "general",
+    "hasExpenses": false,
+    "salaryDeduction": true
+  },
+
+  "business": {
+    "name": "事業所得",
+    "taxType": "general",
+    "hasExpenses": true,
+    "blueReturn": true
+  },
+
+  "realEstate": {
+    "name": "不動産所得",
+    "taxType": "general",
+    "hasExpenses": true
+  },
+
+  "interest": {
+    "name": "利子所得",
+    "taxType": "separate"
+  },
+
+  "dividend": {
+    "name": "配当所得",
+    "taxType": "selectable"
+  },
+
+  "capitalGain": {
+    "name": "譲渡所得",
+    "taxType": "separate"
+  },
+
+  "temporary": {
+    "name": "一時所得",
+    "taxType": "general"
+  },
+
+  "misc": {
+    "name": "雑所得",
+    "taxType": "general"
+  }
+}

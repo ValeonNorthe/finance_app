@@ -1,0 +1,13 @@
+{
+  "stocks":{
+
+    "taxRate":0.20315
+  },
+
+  "realEstate":{
+
+    "shortTerm":0.3963,
+
+    "longTerm":0.20315
+  }
+}
