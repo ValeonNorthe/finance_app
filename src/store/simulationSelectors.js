@@ -154,6 +154,26 @@ export const selectPieData = createSelector([selectSettings], (st) =>
     .filter((d) => d.value > 0)
 );
 
+export const selectAssetAllocationTrend = createSelector(
+  [selectSettings, selectSimulationData],
+  (st, simData) => {
+    return simData
+      .filter((_, i) => i % Math.max(1, Math.floor(simData.length / 15)) === 0 || i === simData.length - 1)
+      .map((d) => {
+        const row = { label: `${d.age}歳` };
+        const totalAssets = d.nominal || 1;
+        
+        st.assets.forEach((asset, i) => {
+          const assetType = ASSET_TYPES[i];
+          const assetBalance = d.assetBalances?.[assetType.key] || 0;
+          row[assetType.label] = totalAssets > 0 ? (assetBalance / totalAssets) * 100 : 0;
+        });
+        
+        return row;
+      });
+  }
+);
+
 export const selectAccChartData = createSelector(
   [selectSettings, selectSimulationData],
   (st, simData) =>

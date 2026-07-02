@@ -9,7 +9,8 @@ import { ASSET_TYPES, CURRENCIES } from "../../constants/appData";
 
 import {
   selectPortfolioSummary,
-  selectSortedAssetChartData
+  selectSortedAssetChartData,
+  selectAssetAllocationTrend
 } from "./portfolioSelectors";
 
 import {
@@ -17,13 +18,14 @@ import {
   updateCashCurrency
 } from "./portfolioActions";
 
-import { PortfolioBarChart } from "./portfolioCharts";
+import { PortfolioBarChart, AssetAllocationTrendChart } from "./portfolioCharts";
 
 export const PortfolioTab = ({ st, set }) => {
   const [activeAsset, setActiveAsset] = useState(null);
 
   const summary = selectPortfolioSummary(st);
   const barChartData = selectSortedAssetChartData(st);
+  const allocationTrendData = selectAssetAllocationTrend(st);
 
   return (
     <div>
@@ -200,6 +202,9 @@ export const PortfolioTab = ({ st, set }) => {
 
       {/* 棒グラフ */}
       <PortfolioBarChart data={barChartData} />
+
+      {/* 資産配分推移グラフ */}
+      <AssetAllocationTrendChart data={allocationTrendData} assetTypes={ASSET_TYPES} />
     </div>
   );
 }

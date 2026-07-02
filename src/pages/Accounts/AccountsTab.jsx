@@ -3,6 +3,7 @@ import { Card } from "../../components/common/Card.jsx";
 import { Metric } from "../../components/common/Metric.jsx";
 import { fmtSmart } from "../../utils/format";
 import { ACC_TYPES } from "../../constants/appData";
+import { useState } from "react";
 
 import {
   selectTotalBalance,
@@ -18,6 +19,9 @@ import {
 import { AccountsAreaChart } from "./accountsCharts";
 
 export const AccountsTab = ({ st, set }) => {
+  const [viewMode, setViewMode] = useState("overall"); // "overall" or "individual"
+  const [granularity, setGranularity] = useState("yearly"); // "yearly" or "monthly"
+  
   const totalBalance = useSelector(selectTotalBalance);
   const accChartData = useSelector(selectAccountChartData);
 
@@ -83,6 +87,17 @@ export const AccountsTab = ({ st, set }) => {
               />
               <span style={{ fontSize: 11, color: "var(--text-muted)", marginRight: 4 }}>円/月</span>
 
+              <span style={{ fontSize: 11, color: "var(--text-muted)" }}>上限:</span>
+              <input
+                type="number"
+                value={acc.maxBalance || ""}
+                onChange={e => updateAccountField(set, acc.id, "maxBalance", e.target.value ? Number(e.target.value) : null)}
+                onFocus={e => e.target.select()}
+                style={{ width: 80, fontSize: 12 }}
+                placeholder="なし"
+              />
+              <span style={{ fontSize: 11, color: "var(--text-muted)", marginRight: 8 }}>円</span>
+
               <span style={{ fontSize: 11, color: "var(--text-muted)" }}>積立期間:</span>
               <input
                 type="number"
@@ -104,14 +119,19 @@ export const AccountsTab = ({ st, set }) => {
               <span style={{ fontSize: 11, color: "var(--text-muted)" }}>歳</span>
 
               <button
-                onClick={() => removeAccount(set, acc.id)}
+                onClick={() => {
+                  if (confirm("この口座を削除しますか？")) {
+                    removeAccount(set, acc.id);
+                  }
+                }}
                 style={{
                   background: "none",
                   border: "none",
                   cursor: "pointer",
-                  color: "var(--text-muted)",
+                  color: "#ef4444",
                   fontSize: 16
                 }}
+                title="削除"
               >
                 <i className="ti ti-trash" aria-hidden="true" />
               </button>
@@ -161,8 +181,85 @@ export const AccountsTab = ({ st, set }) => {
         </div>
       </Card>
 
+      {/* グラフ表示設定 */}
+      <Card title="グラフ表示設定" style={{ marginBottom: 14 }}>
+        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 4 }}>表示モード</div>
+            <div style={{ display: "flex", gap: 4 }}>
+              <button
+                onClick={() => setViewMode("overall")}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                  border: viewMode === "overall" ? "1.5px solid var(--border-accent)" : "0.5px solid var(--border)",
+                  background: viewMode === "overall" ? "var(--bg-accent)" : "transparent",
+                  color: viewMode === "overall" ? "var(--text-accent)" : "var(--text-secondary)",
+                }}
+              >
+                全体合計
+              </button>
+              <button
+                onClick={() => setViewMode("individual")}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                  border: viewMode === "individual" ? "1.5px solid var(--border-accent)" : "0.5px solid var(--border)",
+                  background: viewMode === "individual" ? "var(--bg-accent)" : "transparent",
+                  color: viewMode === "individual" ? "var(--text-accent)" : "var(--text-secondary)",
+                }}
+              >
+                口座別
+              </button>
+            </div>
+          </div>
+          <div>
+            <div style={{ fontSize: 12, color: "var(--text-secondary)", marginBottom: 4 }}>時間単位</div>
+            <div style={{ display: "flex", gap: 4 }}>
+              <button
+                onClick={() => setGranularity("yearly")}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                  border: granularity === "yearly" ? "1.5px solid var(--border-accent)" : "0.5px solid var(--border)",
+                  background: granularity === "yearly" ? "var(--bg-accent)" : "transparent",
+                  color: granularity === "yearly" ? "var(--text-accent)" : "var(--text-secondary)",
+                }}
+              >
+                年次
+              </button>
+              <button
+                onClick={() => setGranularity("monthly")}
+                style={{
+                  padding: "6px 12px",
+                  borderRadius: "var(--radius)",
+                  fontSize: 12,
+                  cursor: "pointer",
+                  border: granularity === "monthly" ? "1.5px solid var(--border-accent)" : "0.5px solid var(--border)",
+                  background: granularity === "monthly" ? "var(--bg-accent)" : "transparent",
+                  color: granularity === "monthly" ? "var(--text-accent)" : "var(--text-secondary)",
+                }}
+              >
+                月次
+              </button>
+            </div>
+          </div>
+        </div>
+      </Card>
+
       {/* グラフ */}
-      <AccountsAreaChart data={accChartData} accounts={st.accounts} />
+      <AccountsAreaChart 
+        data={accChartData} 
+        accounts={st.accounts} 
+        viewMode={viewMode}
+        granularity={granularity}
+      />
     </div>
   );
 }

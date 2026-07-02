@@ -24,15 +24,15 @@ export const makeDefault = () => ({
   ],
 
   monthlyFixed: {
-    rent: 120_000, utility: 20_000, telecom: 8_000,
-    insurance: 15_000, subscriptions: 5_000, other: 30_000,
+    rent: 80_000, utility: 15_000, telecom: 6_000,
+    insurance: 10_000, subscriptions: 3_000, other: 20_000,
   },
   monthlyVariable: {
-    food: 60_000, transport: 20_000, entertainment: 30_000,
-    clothing: 15_000, health: 10_000, misc: 20_000,
+    food: 50_000, transport: 15_000, entertainment: 25_000,
+    clothing: 10_000, health: 8_000, misc: 15_000,
   },
 
-  medical: { regular: 24_000, emergency: 30_000, checkup: 10_000, dental: 20_000 },
+  medical: { regular: 12_000, emergency: 20_000, checkup: 8_000, dental: 15_000 },
 
   monthlyInvest: 50_000,
   investTiming: "monthly",
@@ -58,10 +58,10 @@ export const makeDefault = () => ({
   ],
 
   accounts: [
-    { id: "acc1", type: "nisa",     label: "NISA口座",     balance: 500_000, monthly: 33_333, startAge: 30, endAge: 65 },
-    { id: "acc2", type: "ideco",    label: "iDeCo",        balance: 200_000, monthly: 23_000, startAge: 30, endAge: 65 },
-    { id: "acc3", type: "living",   label: "生活費用口座", balance: 1_000_000, monthly: 0, startAge: 30, endAge: 100 },
-    { id: "acc4", type: "emergency",label: "生活防衛費",   balance: 3_000_000, monthly: 0, startAge: 30, endAge: 100 },
+    { id: "acc1", type: "nisa",     label: "NISA口座",     balance: 500_000, monthly: 33_333, startAge: 30, endAge: 65, maxBalance: null },
+    { id: "acc2", type: "ideco",    label: "iDeCo",        balance: 200_000, monthly: 23_000, startAge: 30, endAge: 65, maxBalance: null },
+    { id: "acc3", type: "living",   label: "生活費用口座", balance: 1_000_000, monthly: 0, startAge: 30, endAge: 100, maxBalance: null },
+    { id: "acc4", type: "emergency",label: "生活防衛費",   balance: 3_000_000, monthly: 0, startAge: 30, endAge: 100, maxBalance: null },
   ],
 
   married: false,

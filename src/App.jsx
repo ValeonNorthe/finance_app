@@ -100,7 +100,7 @@ export default function App() {
           </div>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 12, marginTop: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 12, marginTop: 16 }}>
           <div style={{ background: "var(--bg-card)", padding: 14, borderRadius: 10, border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}>
             <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>現在の総資産</div>
             <div style={{ fontSize: 18, fontWeight: 800, color: "var(--primary)", marginTop: 4 }}>{fmtSmart(totalAssets)}</div>
@@ -112,6 +112,14 @@ export default function App() {
           <div style={{ background: "var(--bg-card)", padding: 14, borderRadius: 10, border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}>
             <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>目標金額</div>
             <div style={{ fontSize: 18, fontWeight: 800, color: "#f59e0b", marginTop: 4 }}>{fmtSmart(st.goalAmount)}</div>
+          </div>
+          <div style={{ background: "var(--bg-card)", padding: 14, borderRadius: 10, border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>予測達成年齢</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: simulationResult.achievedAge ? "var(--text-success)" : "var(--text-warning)", marginTop: 4 }}>{simulationResult.achievedAge ?? "未達"}歳</div>
+          </div>
+          <div style={{ background: "var(--bg-card)", padding: 14, borderRadius: 10, border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>最低資産残高</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "var(--primary)", marginTop: 4 }}>{fmtSmart(simulationResult.minWealth)}</div>
           </div>
         </div>
       </header>
@@ -136,21 +144,8 @@ export default function App() {
           <DashboardTab />
         </div>
       ) : (
-        <div className="main-layout">
-          <div className="content-main" style={{ background: "var(--bg-card)", padding: 24, borderRadius: 16, border: "2px solid var(--border)", boxShadow: "var(--shadow-md)" }}>
-            {renderSettingTab()}
-          </div>
-
-          <div className="sticky-sidebar">
-            <div style={{ background: "var(--bg-card)", padding: 20, borderRadius: 16, border: "2px solid var(--border)", boxShadow: "var(--shadow-md)" }}>
-              <h3 style={{ margin: "0 0 12px 0", fontSize: 15, fontWeight: 800 }}>シミュレーション結果</h3>
-              <div style={{ display: "flex", flexDirection: "column", gap: 12, fontSize: 13 }}>
-                <div>予測達成年齢: <span style={{ fontWeight: 800 }}>{simulationResult.achievedAge ?? "未達"}</span></div>
-                <div>最低資産残高: <span style={{ fontWeight: 800 }}>{fmtSmart(simulationResult.minWealth)}</span></div>
-              </div>
-              <button className="btn-primary" onClick={() => setTab(0)} style={{ width: "100%", marginTop: 16 }}>グラフを見る</button>
-            </div>
-          </div>
+        <div className="content-main" style={{ background: "var(--bg-card)", padding: 24, borderRadius: 16, border: "2px solid var(--border)", boxShadow: "var(--shadow-md)", maxWidth: 1200, margin: "0 auto" }}>
+          {renderSettingTab()}
         </div>
       )}
     </div>
