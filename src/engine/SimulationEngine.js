@@ -4,9 +4,47 @@ import { calcLoanPayment } from "./LoanEngine";
 import { EDU_PATTERNS } from "../constants/appData";
 
 const getLifestageForYear = (lifestages, year) => {
- // yearは現在からの経過年数
+  // yearは現在からの経過年数
   const ls = lifestages.filter(s => s.fromYear <= year).sort((a, b) => b.fromYear - a.fromYear);
   return ls[0] || null;
+};
+
+export const calcCurrentAge = (birthDate, fallback = 30) => {
+  if (!birthDate) return fallback;
+  const birth = new Date(birthDate);
+  const today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  const m = today.getMonth() - birth.getMonth();
+  if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+};
+
+export const resolveSimulationYears = (yearsOrTimeline, st) => {
+  if (Array.isArray(yearsOrTimeline)) {
+    return Math.max(0, yearsOrTimeline.length - 1);
+  }
+  if (typeof yearsOrTimeline === "number" && Number.isFinite(yearsOrTimeline)) {
+    return Math.max(0, yearsOrTimeline);
+  }
+  return Math.max(0, st.goalYears || 30);
+};
+
+export const buildSimulationSummary = (st, yearsOrTimeline) => {
+  const years = resolveSimulationYears(yearsOrTimeline, st);
+  const data = simulateWealth(st, years);
+  const goalIdx = data.findIndex((d) => d.nominal >= st.goalAmount);
+  const last = data.at(-1);
+
+  return {
+    data,
+    years,
+    achievedAge: goalIdx >= 0 ? data[goalIdx].age : null,
+    minWealth: data.length ? Math.min(...data.map((d) => d.nominal)) : 0,
+    finalNominal: last?.nominal ?? 0,
+    finalReal: last?.real ?? 0,
+  };
 };
 
 export const simulateWealth = (st, years) => {
@@ -19,12 +57,10 @@ export const simulateWealth = (st, years) => {
     + st.accounts.reduce((a, b) => a + b.balance, 0);
 
   const data = [];
-  const birthDate = st.birthDate;
-  const currentAge = birthDate
-    ? new Date().getFullYear() - new Date(birthDate).getFullYear()
-    : 30;
+  const currentAge = calcCurrentAge(st.birthDate, st.currentAge || 30);
+  const simulationYears = resolveSimulationYears(years, st);
 
-  for (let yr = 0; yr <= years; yr++) {
+  for (let yr = 0; yr <= simulationYears; yr++) {
     const inflAdj = Math.pow(1 + infl, yr);
     const age = currentAge + yr;
 

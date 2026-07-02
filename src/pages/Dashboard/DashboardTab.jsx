@@ -1,19 +1,21 @@
+import { useSelector } from "react-redux";
 import { Card } from "../../components/common/Card.jsx";
 import { Metric } from "../../components/common/Metric.jsx";
-import { fmtSmart, fmtAxis } from "../../utils/format";
+import { fmtSmart } from "../../utils/format";
 import {
+  selectSettings,
   selectDashboardKPI,
   selectChartData,
   selectPieData,
-  selectAccChartData
-} from "./dashboardSelectors";
+  selectAccChartData,
+} from "../../store/simulationSelectors";
 
 import { AssetChart, AllocationChart, AccountChart } from "./dashboardCharts";
 
-export const DashboardTab = ({ st }) => {
+export const DashboardTab = () => {
+  const st = useSelector(selectSettings);
   const {
     taxResult,
-    simData,
     totalCurrentAssets,
     returnRate,
     riskRate,
@@ -21,18 +23,16 @@ export const DashboardTab = ({ st }) => {
     finalReal,
     progress,
     goalAge,
-    monthlyExp,
     surplus,
-    currentAge
-  } = selectDashboardKPI(st);
+    currentAge,
+  } = useSelector(selectDashboardKPI);
 
-  const chartData = selectChartData(st, simData);
-  const pieData = selectPieData(st);
-  const accChartData = selectAccChartData(st, simData);
+  const chartData = useSelector(selectChartData);
+  const pieData = useSelector(selectPieData);
+  const accChartData = useSelector(selectAccChartData);
 
   return (
     <div>
-      {/* KPI */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, marginBottom: 14 }}>
         <Metric label="目標金額" value={fmtSmart(st.goalAmount)} sub={`${goalAge ? goalAge + "歳で達成予測" : "未達成"}`} color="var(--text-accent)" icon="ti-target" />
         <Metric label="現在の総資産" value={fmtSmart(totalCurrentAssets)} sub={`目標の${progress.toFixed(1)}%`} icon="ti-building-bank" />
@@ -42,7 +42,6 @@ export const DashboardTab = ({ st }) => {
         <Metric label="予測最終資産" value={fmtSmart(finalNominal)} sub={`実質 ${fmtSmart(finalReal)}`} color={finalNominal >= st.goalAmount ? "var(--text-success)" : "var(--text-warning)"} icon="ti-chart-line" />
       </div>
 
-      {/* 目標達成 */}
       <Card style={{ marginBottom: 14 }}>
         <div style={{ display: "flex", justifyContent: "space-between", fontSize: 13, marginBottom: 6 }}>
           <span style={{ color: "var(--text-secondary)" }}>目標達成度 ({currentAge}歳 → 目標 {fmtSmart(st.goalAmount)}円)</span>
@@ -53,17 +52,14 @@ export const DashboardTab = ({ st }) => {
         </div>
       </Card>
 
-      {/* グラフ */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
         <AssetChart chartData={chartData} goalAmount={st.goalAmount} />
         <AllocationChart pieData={pieData} />
       </div>
 
-      <Card title="月次キャッシュフロー概要" style={{ marginBottom: 14 }}>
-        {/* ここはそのまま */}
-      </Card>
+      <Card title="月次キャッシュフロー概要" style={{ marginBottom: 14 }} />
 
       <AccountChart accChartData={accChartData} goalAmount={st.goalAmount} />
     </div>
   );
-}
+};

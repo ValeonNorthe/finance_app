@@ -6,7 +6,7 @@ export const makeDefault = () => ({
   goalAmount: 150_000_000,
   goalYears: 30,
   inflationRate: 2.5,
-  inflationRiskRate: 100.0,
+  inflationRiskRate: 1.0,
 
   incomes: [
     { id: "inc1", label: "本業（会社員）", type: "employee", amount: 4_800_000, active: true },

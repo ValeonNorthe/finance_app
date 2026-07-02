@@ -1,14 +1,16 @@
-import { useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import {
   selectSimulationData,
   selectGoalAchievementAge,
   selectFinalNominal,
   selectPortfolioStats,
-} from "../Simulation/simulationSelectors";
+  selectSimulationMeta,
+} from "../../store/simulationSelectors";
+import { setHorizon } from "../../store/simulationSlice";
 
 import { updateSimulationField } from "../Simulation/simulationActions";
 
-import { ScenarioSummary } from "../Simulation/SimulationComponents";
+import { ScenarioSummary } from "../Simulation/simulationComponents";
 
 import { ResponsiveContainer, AreaChart, Area, CartesianGrid, XAxis, YAxis, Tooltip, ReferenceLine, Legend, ComposedChart, Bar, Line } from "recharts";
 import { CustomTooltip } from "../../components/common/CustomTooltip";
@@ -20,11 +22,12 @@ import { fmt, fmtSmart, fmtAxis } from "../../utils/format";
 import { INCOME_TYPES } from "../../constants/appData"; 
 
 export const SimulationTab = ({ st, set }) => {
-  const simData = useMemo(() => selectSimulationData(st), [st]);
-
-  const goalAge = selectGoalAchievementAge(simData, st.goalAmount);
-  const finalNominal = selectFinalNominal(simData);
-  const { returnRate, riskRate } = selectPortfolioStats(st.assets);
+  const dispatch = useDispatch();
+  const { horizon } = useSelector(selectSimulationMeta);
+  const simData = useSelector(selectSimulationData);
+  const goalAge = useSelector(selectGoalAchievementAge);
+  const finalNominal = useSelector(selectFinalNominal);
+  const { returnRate, riskRate } = useSelector(selectPortfolioStats);
 
   const u = (key, value) => updateSimulationField(set, key, value);
 
@@ -126,6 +129,27 @@ export const SimulationTab = ({ st, set }) => {
         </Card>
 
         <Card>
+          <div style={{ fontSize: 13, fontWeight: 500, color: "var(--text-secondary)", marginBottom: 10 }}>
+            シミュレーション期間モード
+          </div>
+          <div style={{ display: "flex", gap: 8, marginBottom: 12 }}>
+            <button
+              type="button"
+              className={`tab-button ${horizon === "goal" ? "active" : ""}`}
+              style={{ flex: 1 }}
+              onClick={() => dispatch(setHorizon("goal"))}
+            >
+              目標年数まで
+            </button>
+            <button
+              type="button"
+              className={`tab-button ${horizon === "life" ? "active" : ""}`}
+              style={{ flex: 1 }}
+              onClick={() => dispatch(setHorizon("life"))}
+            >
+              100歳まで
+            </button>
+          </div>
           <div
             style={{
               fontSize: 13,

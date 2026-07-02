@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useSelector } from "react-redux";
 import { Card } from "../../components/common/Card.jsx";
 import { Metric } from "../../components/common/Metric.jsx";
 import { fmtSmart } from "../../utils/format";
@@ -6,7 +6,7 @@ import { ACC_TYPES } from "../../constants/appData";
 
 import {
   selectTotalBalance,
-  selectAccountChartData
+  selectAccountChartData,
 } from "./accountsSelectors";
 
 import {
@@ -18,8 +18,8 @@ import {
 import { AccountsAreaChart } from "./accountsCharts";
 
 export const AccountsTab = ({ st, set }) => {
-  const totalBalance = selectTotalBalance(st);
-  const accChartData = selectAccountChartData(st);
+  const totalBalance = useSelector(selectTotalBalance);
+  const accChartData = useSelector(selectAccountChartData);
 
   return (
     <div>
