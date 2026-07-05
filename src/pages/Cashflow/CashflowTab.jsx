@@ -62,11 +62,7 @@ export const CashflowTab = ({ st, set }) => {
               style={k === "health" ? { background: "var(--bg-accent)" } : {}}
             />
           ))}
-<<<<<<< HEAD
           {(st.monthlyVariable?.health || 0) !== (summary.totalMedicalMonthly || 0) && (
-=======
-          {st.monthlyVariable.health !== summary.totalMedicalMonthly && (
->>>>>>> eb5fa1b0ea88092afdb1ee7f87a84c0fb7ad3e10
             <div style={{ fontSize: 11, color: "var(--text-accent)", marginTop: 4, padding: "4px 8px", background: "var(--bg-accent)", borderRadius: "var(--radius)" }}>
               <i className="ti ti-info-circle" style={{ marginRight: 4 }} />
               健康・医療は医療費（年間）から自動計算: {fmt(summary.totalMedicalMonthly)}円/月

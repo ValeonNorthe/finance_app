@@ -10,7 +10,6 @@ import { ASSET_TYPES, CURRENCIES } from "../../constants/appData";
 import {
   selectPortfolioSummary,
   selectSortedAssetChartData,
-  selectAssetAllocationTrend
 } from "./portfolioSelectors";
 import { selectAssetAllocationTrend } from "../../store/simulationSelectors";
 
@@ -24,15 +23,9 @@ import { PortfolioBarChart, AssetAllocationTrendChart } from "./portfolioCharts"
 export const PortfolioTab = ({ st, set }) => {
   const [activeAsset, setActiveAsset] = useState(null);
 
-<<<<<<< HEAD
   const summary = selectPortfolioSummary(st || {});
   const barChartData = selectSortedAssetChartData(st || {});
   const allocationTrendData = selectAssetAllocationTrend(st || {});
-=======
-  const summary = selectPortfolioSummary(st);
-  const barChartData = selectSortedAssetChartData(st);
-  const allocationTrendData = selectAssetAllocationTrend(st);
->>>>>>> eb5fa1b0ea88092afdb1ee7f87a84c0fb7ad3e10
 
   return (
     <div>
