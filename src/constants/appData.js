@@ -6,14 +6,87 @@ export const ASSET_TYPES = [ { key: "gold",  label: "金（ゴールド）",  co
 ];
 export const CURRENCIES = ["JPY","USD","EUR","GBP","CNY","AUD","CHF","HKD"];
 export const EDU_PATTERNS =  [
-  { label: "全て公立",           cost: 1000,  desc: "幼〜大学まで公立" },
-  { label: "私立中高・国公立大", cost: 1800,  desc: "中高私立、大学国公立" },
-  { label: "私立中〜大学",       cost: 2500,  desc: "中学から私立一貫" },
-  { label: "私立（理系）",       cost: 2800,  desc: "私立理系大学含む" },
-  { label: "私立（医歯薬）",     cost: 4500,  desc: "医学部・歯学部など" },
-  { label: "海外留学含む",       cost: 5500,  desc: "海外大学・留学費用含む" },
+  { 
+    label: "全て公立", 
+    cost: 1000,  
+    desc: "幼〜大学まで公立",
+    ageGroups: {
+      "0-3": { monthly: 0, desc: "保育園（公立）" },
+      "3-6": { monthly: 0, desc: "幼稚園（公立）" },
+      "6-12": { monthly: 0, desc: "小学校（公立）" },
+      "12-15": { monthly: 0, desc: "中学校（公立）" },
+      "15-18": { monthly: 0, desc: "高校（公立）" },
+      "18-22": { monthly: 0, desc: "大学（国公立）" }
+    }
+  },
+  { 
+    label: "私立中高・国公立大", 
+    cost: 1800,  
+    desc: "中高私立、大学国公立",
+    ageGroups: {
+      "0-3": { monthly: 0, desc: "保育園（公立）" },
+      "3-6": { monthly: 0, desc: "幼稚園（公立）" },
+      "6-12": { monthly: 0, desc: "小学校（公立）" },
+      "12-15": { monthly: 50, desc: "中学校（私立）" },
+      "15-18": { monthly: 60, desc: "高校（私立）" },
+      "18-22": { monthly: 0, desc: "大学（国公立）" }
+    }
+  },
+  { 
+    label: "私立中〜大学", 
+    cost: 2500,  
+    desc: "中学から私立一貫",
+    ageGroups: {
+      "0-3": { monthly: 0, desc: "保育園（公立）" },
+      "3-6": { monthly: 0, desc: "幼稚園（公立）" },
+      "6-12": { monthly: 0, desc: "小学校（公立）" },
+      "12-15": { monthly: 50, desc: "中学校（私立）" },
+      "15-18": { monthly: 60, desc: "高校（私立）" },
+      "18-22": { monthly: 80, desc: "大学（私立）" }
+    }
+  },
+  { 
+    label: "私立（理系）", 
+    cost: 2800,  
+    desc: "私立理系大学含む",
+    ageGroups: {
+      "0-3": { monthly: 0, desc: "保育園（公立）" },
+      "3-6": { monthly: 0, desc: "幼稚園（公立）" },
+      "6-12": { monthly: 0, desc: "小学校（公立）" },
+      "12-15": { monthly: 50, desc: "中学校（私立）" },
+      "15-18": { monthly: 60, desc: "高校（私立）" },
+      "18-22": { monthly: 100, desc: "大学（私立理系）" }
+    }
+  },
+  { 
+    label: "私立（医歯薬）", 
+    cost: 4500,  
+    desc: "医学部・歯学部など",
+    ageGroups: {
+      "0-3": { monthly: 0, desc: "保育園（公立）" },
+      "3-6": { monthly: 0, desc: "幼稚園（公立）" },
+      "6-12": { monthly: 0, desc: "小学校（公立）" },
+      "12-15": { monthly: 50, desc: "中学校（私立）" },
+      "15-18": { monthly: 60, desc: "高校（私立）" },
+      "18-22": { monthly: 200, desc: "大学（医歯薬）" }
+    }
+  },
+  { 
+    label: "海外留学含む", 
+    cost: 5500,  
+    desc: "海外大学・留学費用含む",
+    ageGroups: {
+      "0-3": { monthly: 0, desc: "保育園（公立）" },
+      "3-6": { monthly: 0, desc: "幼稚園（公立）" },
+      "6-12": { monthly: 0, desc: "小学校（公立）" },
+      "12-15": { monthly: 50, desc: "中学校（私立）" },
+      "15-18": { monthly: 60, desc: "高校（私立）" },
+      "18-22": { monthly: 250, desc: "海外大学・留学" }
+    }
+  },
 ];
 export const ACC_TYPES = [
+  { key: "cash",       label: "現金・手元資金",            color: "#898781" },
   { key: "living",     label: "生活費用普通口座",          color: "#2a78d6" },
   { key: "emergency",  label: "生活防衛費普通口座",        color: "#1baf7a" },
   { key: "medium",     label: "中期資金用普通口座",        color: "#eda100" },

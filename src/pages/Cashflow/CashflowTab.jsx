@@ -18,8 +18,8 @@ import {
 } from "./cashflowActions";
 
 export const CashflowTab = ({ st, set }) => {
-  const summary = selectCashflowSummary(st);
-  const expPieData = selectExpensePieData(st);
+  const summary = selectCashflowSummary(st || {});
+  const expPieData = selectExpensePieData(st || {});
 
   return (
     <div>
@@ -33,7 +33,7 @@ export const CashflowTab = ({ st, set }) => {
       {/* 固定費 */}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, marginBottom: 14 }}>
         <Card title="固定費（月）">
-          {Object.entries(st.monthlyFixed).map(([k, v]) => (
+          {Object.entries(st.monthlyFixed || {}).map(([k, v]) => (
             <NumInput
               key={k}
               label={summary.fixedLabels[k]}
@@ -50,33 +50,57 @@ export const CashflowTab = ({ st, set }) => {
 
         {/* 変動費 */}
         <Card title="変動費（月）">
-          {Object.entries(st.monthlyVariable).map(([k, v]) => (
+          {Object.entries(st.monthlyVariable || {}).map(([k, v]) => (
             <NumInput
               key={k}
               label={summary.varLabels[k]}
-              value={v}
+              value={k === "health" ? summary.totalMedicalMonthly : v}
               suffix="円"
               step={1000}
-              onChange={val => updateVariableExpense(set, k, val)}
+              onChange={val => k === "health" ? null : updateVariableExpense(set, k, val)}
+              disabled={k === "health"}
+              style={k === "health" ? { background: "var(--bg-accent)" } : {}}
             />
           ))}
+          {(st.monthlyVariable?.health || 0) !== (summary.totalMedicalMonthly || 0) && (
+            <div style={{ fontSize: 11, color: "var(--text-accent)", marginTop: 4, padding: "4px 8px", background: "var(--bg-accent)", borderRadius: "var(--radius)" }}>
+              <i className="ti ti-info-circle" style={{ marginRight: 4 }} />
+              健康・医療は医療費（年間）から自動計算: {fmt(summary.totalMedicalMonthly)}円/月
+            </div>
+          )}
           <div style={{ fontSize: 12, color: "var(--text-muted)", borderTop: "0.5px solid var(--border)", paddingTop: 6, marginTop: 4 }}>
-            合計: <strong style={{ color: "var(--text-primary)" }}>{fmt(summary.monthlyVar)}</strong>円
+            合計: <strong style={{ color: "var(--text-primary)" }}>{fmt(summary.monthlyVarExcludingHealth + summary.totalMedicalMonthly)}</strong>円
           </div>
         </Card>
       </div>
 
       {/* 医療費 */}
       <Card title="医療費（年間 → 月額換算）" style={{ marginBottom: 14 }}>
+        <div style={{ padding: "6px 10px", background: "var(--bg-accent)", borderRadius: "var(--radius)", fontSize: 11, color: "var(--text-accent)", marginBottom: 10 }}>
+          <i className="ti ti-info-circle" style={{ marginRight: 4 }} />
+          この金額は変動費の「健康・医療」と連動して月額換算されます
+        </div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-          {Object.entries(st.medical).map(([k, v]) => (
+          {Object.entries(st.medical || {}).map(([k, v]) => (
             <NumInput
               key={k}
               label={summary.medLabels[k] + "（年額）"}
               value={v}
               suffix="円"
               step={1000}
-              onChange={val => updateMedicalExpense(set, k, val)}
+              onChange={val => {
+                updateMedicalExpense(set, k, val);
+                // Sync with health variable expense
+                const newMedicalTotal = Object.entries({ ...st.medical, [k]: val })
+                  .reduce((a, [_, val]) => a + val, 0);
+                set(p => ({
+                  ...p,
+                  monthlyVariable: {
+                    ...p.monthlyVariable,
+                    health: newMedicalTotal / 12
+                  }
+                }));
+              }}
             />
           ))}
         </div>

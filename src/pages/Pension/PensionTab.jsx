@@ -16,7 +16,7 @@ import { PENSION_TYPES } from "../../constants/appData";
 export const PensionTab = ({ st, set }) => {
   const [activeP, setActiveP] = useState(null);
 
-  const totalMonthly = selectTotalMonthlyPension(st.pensionRecords, st.pensionStartAge);
+  const totalMonthly = selectTotalMonthlyPension(st?.pensionRecords || [], st?.pensionStartAge || 65);
 
   return (
     <div>
@@ -49,7 +49,7 @@ export const PensionTab = ({ st, set }) => {
 
       {/* 年金記録一覧 */}
       <Card title="年金記録">
-        {st.pensionRecords.map((rec) => (
+        {(st.pensionRecords || []).map((rec) => (
           <div key={rec.id} style={{ marginBottom: 8 }}>
             <PensionRow
               rec={rec}

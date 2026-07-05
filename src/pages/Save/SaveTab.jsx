@@ -10,6 +10,7 @@ import {
 
 import { SaveMessage, SaveRow } from "../Save/SaveComponents";
 import { Card } from "../../components/common/Card.jsx";
+import { makeDefault } from "../../models/defaultState";
 
 export const SaveTab = ({ st, set }) => {
   const [saves, setSaves] = useState({});

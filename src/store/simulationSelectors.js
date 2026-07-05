@@ -97,31 +97,48 @@ export const selectTotalAnnualIncome = createSelector([selectSettings], (st) => 
 export const selectDashboardKPI = createSelector(
   [selectSettings, selectTaxResult, selectSimulationData, selectPortfolioStats, selectCurrentAge, selectTotalAssets],
   (st, taxResult, simData, { returnRate, riskRate }, currentAge, totalCurrentAssets) => {
-    const finalNominal = simData.at(-1)?.nominal || 0;
-    const finalReal = simData.at(-1)?.real || 0;
-    const progress = Math.min(100, (totalCurrentAssets / st.goalAmount) * 100);
-    const goalIdx = simData.findIndex((d) => d.nominal >= st.goalAmount);
+    if (!st) {
+      return {
+        taxResult: { takehome: 0 },
+        simData: [],
+        totalCurrentAssets: 0,
+        returnRate: 0,
+        riskRate: 0,
+        finalNominal: 0,
+        finalReal: 0,
+        progress: 0,
+        goalAge: null,
+        monthlyExp: 0,
+        surplus: 0,
+        currentAge: 30,
+      };
+    }
+
+    const finalNominal = simData?.at(-1)?.nominal || 0;
+    const finalReal = simData?.at(-1)?.real || 0;
+    const progress = st.goalAmount > 0 ? Math.min(100, (totalCurrentAssets / st.goalAmount) * 100) : 0;
+    const goalIdx = simData?.findIndex((d) => d.nominal >= st.goalAmount) ?? -1;
     const goalAge = goalIdx >= 0 ? simData[goalIdx]?.age : null;
 
     const monthlyExp =
-      Object.values(st.monthlyFixed).reduce((a, b) => a + b, 0) +
-      Object.values(st.monthlyVariable).reduce((a, b) => a + b, 0);
+      Object.values(st.monthlyFixed || {}).reduce((a, b) => a + (b || 0), 0) +
+      Object.values(st.monthlyVariable || {}).reduce((a, b) => a + (b || 0), 0);
 
-    const surplus = taxResult.takehome / 12 - monthlyExp;
+    const surplus = (taxResult?.takehome || 0) / 12 - monthlyExp;
 
     return {
-      taxResult,
-      simData,
-      totalCurrentAssets,
-      returnRate,
-      riskRate,
+      taxResult: taxResult || { takehome: 0 },
+      simData: simData || [],
+      totalCurrentAssets: totalCurrentAssets || 0,
+      returnRate: returnRate || 0,
+      riskRate: riskRate || 0,
       finalNominal,
       finalReal,
       progress,
       goalAge,
       monthlyExp,
       surplus,
-      currentAge,
+      currentAge: currentAge || 30,
     };
   }
 );
@@ -144,29 +161,60 @@ export const selectChartData = createSelector(
       }))
 );
 
-export const selectPieData = createSelector([selectSettings], (st) =>
-  st.assets
+export const selectPieData = createSelector([selectSettings], (st) => {
+  if (!st || !st.assets || !Array.isArray(st.assets)) {
+    return [];
+  }
+  return st.assets
     .map((a, i) => ({
-      name: ASSET_TYPES[i].label,
-      value: a.ratio,
-      color: ASSET_TYPES[i].color,
+      name: ASSET_TYPES[i]?.label || 'Unknown',
+      value: a.ratio || 0,
+      color: ASSET_TYPES[i]?.color || '#999',
     }))
-    .filter((d) => d.value > 0)
+    .filter((d) => d.value > 0);
+});
+
+export const selectAssetAllocationTrend = createSelector(
+  [selectSettings, selectSimulationData],
+  (st, simData) => {
+    if (!st || !st.assets || !Array.isArray(st.assets) || !simData || !Array.isArray(simData)) {
+      return [];
+    }
+    return simData
+      .filter((_, i) => i % Math.max(1, Math.floor(simData.length / 15)) === 0 || i === simData.length - 1)
+      .map((d) => {
+        const row = { label: `${d.age}歳` };
+        const totalAssets = d.nominal || 1;
+        
+        st.assets.forEach((asset, i) => {
+          const assetType = ASSET_TYPES[i];
+          if (!assetType) return;
+          const assetBalance = d.assetBalances?.[assetType.key] || 0;
+          row[assetType.label] = totalAssets > 0 ? (assetBalance / totalAssets) * 100 : 0;
+        });
+        
+        return row;
+      });
+  }
 );
 
 export const selectAccChartData = createSelector(
   [selectSettings, selectSimulationData],
-  (st, simData) =>
-    simData
+  (st, simData) => {
+    if (!st || !simData || !Array.isArray(simData)) {
+      return [];
+    }
+    return simData
       .filter(
         (_, i) =>
-          i % Math.max(1, Math.floor(st.goalYears / 8)) === 0 ||
+          i % Math.max(1, Math.floor((st.goalYears || 30) / 8)) === 0 ||
           i === simData.length - 1
       )
       .map((d) => ({
         label: `${d.age}歳`,
-        資産: Math.round(d.nominal),
-      }))
+        資産: Math.round(d.nominal || 0),
+      }));
+  }
 );
 
 // ── Simulation tab helpers ──────────────────────────────────
@@ -174,6 +222,7 @@ export const selectAccChartData = createSelector(
 export const selectGoalAchievementAge = createSelector(
   [selectSimulationData, selectSettings],
   (simData, st) => {
+    if (!simData || !Array.isArray(simData) || !st) return null;
     const idx = simData.findIndex((d) => d.nominal >= st.goalAmount);
     return idx >= 0 ? simData[idx].age : null;
   }
@@ -195,34 +244,52 @@ export const selectScenarioValues = createSelector(
 
 // ── Accounts tab ────────────────────────────────────────────
 
-export const selectTotalBalance = createSelector([selectSettings], (st) =>
-  st.accounts.reduce((a, b) => a + b.balance, 0)
-);
+export const selectTotalBalance = createSelector([selectSettings], (st) => {
+  if (!st || !st.accounts || !Array.isArray(st.accounts)) return 0;
+  return st.accounts.reduce((a, b) => a + (b.balance || 0), 0);
+});
 
 export const selectAccountChartData = createSelector(
   [selectSettings, selectSimulationData],
-  (st, simData) =>
-    simData
+  (st, simData) => {
+    if (!st || !st.accounts || !Array.isArray(st.accounts) || !simData || !Array.isArray(simData)) {
+      return [];
+    }
+    return simData
       .filter((_, i) => i % Math.max(1, Math.floor(simData.length / 10)) === 0)
       .map((d) => {
         const row = { label: `${d.age}歳` };
         st.accounts.forEach((acc) => {
           row[acc.label] = Math.round(
-            acc.balance * Math.pow(1.03, d.year) + acc.monthly * 12 * d.year
+            (acc.balance || 0) * Math.pow(1.03, d.year) + (acc.monthly || 0) * 12 * d.year
           );
         });
         return row;
-      })
+      });
+  }
 );
 
 export const selectMonthlyCashflowData = createSelector(
   [selectSettings, selectTaxResult],
   (st, taxResult) => {
-    const monthlyTH = Math.round(taxResult.takehome / 12);
-    const fixed = Object.values(st.monthlyFixed).reduce((a, b) => a + b, 0);
-    const variable = Object.keys(st.monthlyVariable)
+    if (!st) {
+      return [{
+        name: "収入と支出のバランス",
+        "手取り月収": 0,
+        "固定費": 0,
+        "変動費": 0,
+        "医療費": 0,
+        "投資額": 0,
+        "貯蓄余剰": 0,
+        "赤字": 0,
+      }];
+    }
+
+    const monthlyTH = Math.round((taxResult?.takehome || 0) / 12);
+    const fixed = Object.values(st.monthlyFixed || {}).reduce((a, b) => a + (b || 0), 0);
+    const variable = Object.keys(st.monthlyVariable || {})
       .filter(key => key !== "health")
-      .reduce((a, key) => a + st.monthlyVariable[key], 0);
+      .reduce((a, key) => a + (st.monthlyVariable[key] || 0), 0);
 
     const annualMedical = (
       (st.medical?.regular || 0) +
@@ -232,7 +299,7 @@ export const selectMonthlyCashflowData = createSelector(
     );
     const monthlyMedical = Math.round(annualMedical / 12);
 
-    const invest = st.accounts.reduce((sum, a) => sum + (a.monthly || 0), 0);
+    const invest = (st.accounts || []).reduce((sum, a) => sum + (a.monthly || 0), 0);
     const totalExpAndInvest = fixed + variable + monthlyMedical + invest;
     const surplus = monthlyTH - totalExpAndInvest;
 

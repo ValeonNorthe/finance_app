@@ -11,27 +11,29 @@ import {
   selectPortfolioSummary,
   selectSortedAssetChartData
 } from "./portfolioSelectors";
+import { selectAssetAllocationTrend } from "../../store/simulationSelectors";
 
 import {
   updateAssetField,
   updateCashCurrency
 } from "./portfolioActions";
 
-import { PortfolioBarChart } from "./portfolioCharts";
+import { PortfolioBarChart, AssetAllocationTrendChart } from "./portfolioCharts";
 
 export const PortfolioTab = ({ st, set }) => {
   const [activeAsset, setActiveAsset] = useState(null);
 
-  const summary = selectPortfolioSummary(st);
-  const barChartData = selectSortedAssetChartData(st);
+  const summary = selectPortfolioSummary(st || {});
+  const barChartData = selectSortedAssetChartData(st || {});
+  const allocationTrendData = selectAssetAllocationTrend(st || {});
 
   return (
     <div>
       {/* KPI */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 10, marginBottom: 14 }}>
-        <Metric label="総資産" value={fmtSmart(summary.totalAmount) + "円"} icon="ti-building-bank" />
-        <Metric label="期待リターン" value={`${summary.returnRate.toFixed(2)}%`} color="var(--text-success)" icon="ti-trending-up" />
-        <Metric label="ポートフォリオリスク" value={`±${summary.riskRate.toFixed(2)}%`} color="var(--text-warning)" icon="ti-alert-triangle" />
+        <Metric label="総資産" value={fmtSmart(summary.totalAmount || 0) + "円"} icon="ti-building-bank" />
+        <Metric label="期待リターン" value={`${(summary.returnRate || 0).toFixed(2)}%`} color="var(--text-success)" icon="ti-trending-up" />
+        <Metric label="ポートフォリオリスク" value={`±${(summary.riskRate || 0).toFixed(2)}%`} color="var(--text-warning)" icon="ti-alert-triangle" />
       </div>
 
       {/* 配分比率チェック */}
@@ -51,8 +53,8 @@ export const PortfolioTab = ({ st, set }) => {
       )}
 
       {/* アセット一覧 */}
-      {st.assets.map((asset, i) => {
-        const info = ASSET_TYPES[i];
+      {(st.assets || []).map((asset, i) => {
+        const info = ASSET_TYPES[i] || { key: 'unknown', label: 'Unknown', color: '#999' };
         const isActive = activeAsset === i;
 
         return (
@@ -174,7 +176,7 @@ export const PortfolioTab = ({ st, set }) => {
 
       {/* 通貨分散 */}
       <Card title="現金・預金の通貨分散" style={{ marginBottom: 14, marginTop: 4 }}>
-        {st.cashCurrencies.map((c, i) => (
+        {(st.cashCurrencies || []).map((c, i) => (
           <div key={i} style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
             <select
               value={c.currency}
@@ -200,6 +202,9 @@ export const PortfolioTab = ({ st, set }) => {
 
       {/* 棒グラフ */}
       <PortfolioBarChart data={barChartData} />
+
+      {/* 資産配分推移グラフ */}
+      <AssetAllocationTrendChart data={allocationTrendData} assetTypes={ASSET_TYPES} />
     </div>
   );
 }

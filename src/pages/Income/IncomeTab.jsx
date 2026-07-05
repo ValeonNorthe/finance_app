@@ -24,8 +24,8 @@ import { InfoRow } from "../../components/common/InfoRow.jsx";
 export const IncomeTab = ({ st, set }) => {
   const [activeInc, setActiveInc] = useState(null);
 
-  const summary = selectIncomeSummary(st);
-  const taxResult = selectTaxResult(st);
+  const summary = selectIncomeSummary(st || {});
+  const taxResult = selectTaxResult(st || {});
 
   return (
     <div>
@@ -38,7 +38,7 @@ export const IncomeTab = ({ st, set }) => {
 
       {/* 収入一覧 */}
       <Card title="収入一覧" style={{ marginBottom: 14 }}>
-        {st.incomes.map(inc => (
+        {(st.incomes || []).map(inc => (
           <IncomeEditor
             key={inc.id}
             inc={inc}

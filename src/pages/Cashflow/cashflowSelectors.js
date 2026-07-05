@@ -2,27 +2,56 @@ import { calcTaxFull } from "../../engine/TaxEngine";
 import { SERIES_COLORS } from "../../constants/appData";
 
 export const selectCashflowSummary = (st) => {
+  if (!st) {
+    return {
+      monthlyTH: 0,
+      monthlyFixed: 0,
+      monthlyVar: 0,
+      monthlyVarExcludingHealth: 0,
+      monthlyMedical: 0,
+      totalMedicalMonthly: 0,
+      annualMedical: 0,
+      totalExp: 0,
+      surplus: 0,
+      creditBack: 0,
+      pointBack: 0,
+      annualBack: 0,
+      fixedLabels: {},
+      varLabels: {},
+      medLabels: {}
+    };
+  }
+
   const taxResult = calcTaxFull(
-    st.incomes,
-    st.dependents,
-    st.spouseIncome,
-    st.includeSpouse,
-    st.socialInsurance,
+    st.incomes || [],
+    st.dependents || 0,
+    st.spouseIncome || 0,
+    st.includeSpouse || false,
+    st.socialInsurance || 0,
     0
   );
 
-  const monthlyTH = taxResult.takehome / 12;
+  const monthlyTH = (taxResult.takehome || 0) / 12;
 
-  const monthlyFixed = Object.values(st.monthlyFixed).reduce((a, b) => a + b, 0);
-  const monthlyVar = Object.values(st.monthlyVariable).reduce((a, b) => a + b, 0);
-  const annualMedical = Object.values(st.medical).reduce((a, b) => a + b, 0);
+  const monthlyFixed = Object.values(st.monthlyFixed || {}).reduce((a, b) => a + (b || 0), 0);
+  const monthlyVar = Object.values(st.monthlyVariable || {}).reduce((a, b) => a + (b || 0), 0);
+  const annualMedical = Object.values(st.medical || {}).reduce((a, b) => a + (b || 0), 0);
   const monthlyMedical = annualMedical / 12;
 
-  const totalExp = monthlyFixed + monthlyVar + monthlyMedical;
+  // Link medical expenses with health/medical variable expense
+  // Medical section (annual/12) should be the source of truth for health variable expense
+  const totalMedicalMonthly = monthlyMedical;
+
+  // Calculate total expenses excluding health from variable (since it's now in medical)
+  const monthlyVarExcludingHealth = Object.keys(st.monthlyVariable || {})
+    .filter(key => key !== "health")
+    .reduce((a, key) => a + (st.monthlyVariable[key] || 0), 0);
+
+  const totalExp = monthlyFixed + monthlyVarExcludingHealth + totalMedicalMonthly;
   const surplus = monthlyTH - totalExp - (st.monthlyInvest || 0);
 
-  const creditBack = totalExp * st.creditCardRate / 100;
-  const pointBack = totalExp * st.pointRate / 100;
+  const creditBack = totalExp * (st.creditCardRate || 0) / 100;
+  const pointBack = totalExp * (st.pointRate || 0) / 100;
   const annualBack = (creditBack + pointBack) * 12;
 
   const fixedLabels = {
@@ -54,7 +83,9 @@ export const selectCashflowSummary = (st) => {
     monthlyTH,
     monthlyFixed,
     monthlyVar,
+    monthlyVarExcludingHealth,
     monthlyMedical,
+    totalMedicalMonthly,
     annualMedical,
     totalExp,
     surplus,
@@ -68,6 +99,8 @@ export const selectCashflowSummary = (st) => {
 };
 
 export const selectExpensePieData = (st) => {
+  if (!st) return [];
+
   const fixedLabels = {
     rent: "家賃・住居費",
     utility: "光熱費",
@@ -87,14 +120,14 @@ export const selectExpensePieData = (st) => {
   };
 
   return [
-    ...Object.entries(st.monthlyFixed).map(([k, v]) => ({
+    ...Object.entries(st.monthlyFixed || {}).map(([k, v]) => ({
       name: fixedLabels[k],
-      value: v,
+      value: v || 0,
       color: SERIES_COLORS[0]
     })),
-    ...Object.entries(st.monthlyVariable).map(([k, v]) => ({
+    ...Object.entries(st.monthlyVariable || {}).map(([k, v]) => ({
       name: varLabels[k],
-      value: v,
+      value: v || 0,
       color: SERIES_COLORS[1]
     }))
   ].filter(d => d.value > 0);

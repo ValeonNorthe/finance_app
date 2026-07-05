@@ -31,8 +31,8 @@ import {
 export const LifeTab = ({ st, set }) => {
   const [activeChild, setActiveChild] = useState(null);
 
-  const currentAge = selectCurrentAge(st);
-  const loanMonthly = selectLoanMonthly(st);
+  const currentAge = selectCurrentAge(st || {});
+  const loanMonthly = selectLoanMonthly(st || {});
 
   return (
     <div>
@@ -46,7 +46,7 @@ export const LifeTab = ({ st, set }) => {
 
       {/* 子供 */}
       <Card title="子供・教育費" style={{ marginBottom: 12 }}>
-        {st.children.map(child => {
+        {(st.children || []).map(child => {
           const birthAge = selectChildBirthAge(st, child);
           const eduPat = EDU_PATTERNS[child.eduPattern];
 

@@ -32,13 +32,20 @@ export const calcTaxFull = (
   customSocialIns,
   lifestageIdx
 ) => {
+  // Safety checks
+  if (!incomes || !Array.isArray(incomes)) incomes = [];
+  dependents = dependents || 0;
+  spouseIncome = spouseIncome || 0;
+  includeSpouse = includeSpouse || false;
+  customSocialIns = customSocialIns || 0;
+
   // 複数収入の合算
   let totalGross = 0;
   let totalNet = 0;
 
   const processedIncomes = incomes.map(inc => {
-    const { kyuyoDeduction, jigyoDeduction, netIncome } = calcSingleIncomeTax(inc.amount, inc.type);
-    totalGross += inc.amount;
+    const { kyuyoDeduction, jigyoDeduction, netIncome } = calcSingleIncomeTax(inc.amount || 0, inc.type || "employee");
+    totalGross += inc.amount || 0;
     totalNet += netIncome;
     return { ...inc, kyuyoDeduction, jigyoDeduction, netIncome };
   });

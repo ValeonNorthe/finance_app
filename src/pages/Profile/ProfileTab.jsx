@@ -7,7 +7,7 @@ import { computeProfileAge } from "./profileSelectors";
 export const ProfileTab = ({ st, set }) => {
   const u = (k, v) => set(p => ({ ...p, [k]: v }));
 
-  const { currentAge, goalAge } = computeProfileAge(st);
+  const { currentAge, goalAge } = computeProfileAge(st || {});
 
   return (
     <div>

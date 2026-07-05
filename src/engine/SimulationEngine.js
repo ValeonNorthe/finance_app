@@ -169,7 +169,17 @@ export const simulateWealth = (st, years) => {
         const start = acc.startAge !== undefined ? acc.startAge : currentAge;
         const end = acc.endAge !== undefined ? acc.endAge : 120;
         if (age >= start && age <= end) {
-          bal += (acc.monthly || 0);
+          // Check maxBalance limit before adding monthly contribution
+          const maxBal = acc.maxBalance;
+          if (maxBal === null || bal < maxBal) {
+            const contribution = acc.monthly || 0;
+            if (maxBal === null || bal + contribution <= maxBal) {
+              bal += contribution;
+            } else {
+              // Only add up to the max balance
+              bal = maxBal;
+            }
+          }
         }
         const isInvest = ["nisa", "ideco", "specific_w", "specific_r", "general"].includes(acc.type);
         const r = isInvest ? retNominal : 0.001;

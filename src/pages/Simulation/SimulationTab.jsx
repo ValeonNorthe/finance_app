@@ -23,11 +23,11 @@ import { INCOME_TYPES } from "../../constants/appData";
 
 export const SimulationTab = ({ st, set }) => {
   const dispatch = useDispatch();
-  const { horizon } = useSelector(selectSimulationMeta);
-  const simData = useSelector(selectSimulationData);
+  const { horizon = "goal" } = useSelector(selectSimulationMeta) || {};
+  const simData = useSelector(selectSimulationData) || [];
   const goalAge = useSelector(selectGoalAchievementAge);
-  const finalNominal = useSelector(selectFinalNominal);
-  const { returnRate, riskRate } = useSelector(selectPortfolioStats);
+  const finalNominal = useSelector(selectFinalNominal) || 0;
+  const { returnRate = 0, riskRate = 0 } = useSelector(selectPortfolioStats) || {};
 
   const u = (key, value) => updateSimulationField(set, key, value);
 
