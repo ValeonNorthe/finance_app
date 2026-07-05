@@ -37,7 +37,6 @@ export function PortfolioBarChart({ data }) {
 }
 
 export function AssetAllocationTrendChart({ data, assetTypes }) {
-<<<<<<< HEAD
   if (!data || !Array.isArray(data) || data.length === 0 || !assetTypes || !Array.isArray(assetTypes)) {
     return (
       <Card title="資産配分比率の推移（年齢軸）">
@@ -48,8 +47,6 @@ export function AssetAllocationTrendChart({ data, assetTypes }) {
     );
   }
 
-=======
->>>>>>> eb5fa1b0ea88092afdb1ee7f87a84c0fb7ad3e10
   return (
     <Card title="資産配分比率の推移（年齢軸）">
       <ResponsiveContainer width="100%" height={250}>
@@ -61,19 +58,11 @@ export function AssetAllocationTrendChart({ data, assetTypes }) {
 
           {assetTypes.map((asset, i) => (
             <Area
-<<<<<<< HEAD
               key={asset.key || i}
               type="monotone"
               dataKey={asset.label}
               stroke={asset.color || "#999"}
               fill={asset.color || "#999"}
-=======
-              key={asset.key}
-              type="monotone"
-              dataKey={asset.label}
-              stroke={asset.color}
-              fill={asset.color}
->>>>>>> eb5fa1b0ea88092afdb1ee7f87a84c0fb7ad3e10
               fillOpacity={0.15}
               strokeWidth={1.5}
               stackId="stack"
