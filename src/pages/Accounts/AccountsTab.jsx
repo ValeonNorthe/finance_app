@@ -22,8 +22,13 @@ export const AccountsTab = ({ st, set }) => {
   const [viewMode, setViewMode] = useState("overall"); // "overall" or "individual"
   const [granularity, setGranularity] = useState("yearly"); // "yearly" or "monthly"
   
+<<<<<<< HEAD
   const totalBalance = useSelector(selectTotalBalance) || 0;
   const accChartData = useSelector(selectAccountChartData) || [];
+=======
+  const totalBalance = useSelector(selectTotalBalance);
+  const accChartData = useSelector(selectAccountChartData);
+>>>>>>> eb5fa1b0ea88092afdb1ee7f87a84c0fb7ad3e10
 
   return (
     <div>

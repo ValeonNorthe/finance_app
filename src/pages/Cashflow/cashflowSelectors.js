@@ -39,6 +39,7 @@ export const selectCashflowSummary = (st) => {
   const monthlyMedical = annualMedical / 12;
 
   // Link medical expenses with health/medical variable expense
+<<<<<<< HEAD
   // Medical section (annual/12) should be the source of truth for health variable expense
   const totalMedicalMonthly = monthlyMedical;
 
@@ -46,6 +47,16 @@ export const selectCashflowSummary = (st) => {
   const monthlyVarExcludingHealth = Object.keys(st.monthlyVariable || {})
     .filter(key => key !== "health")
     .reduce((a, key) => a + (st.monthlyVariable[key] || 0), 0);
+=======
+  // Combine medical section (annual/12) with health variable expense
+  const healthMedicalVar = st.monthlyVariable.health || 0;
+  const totalMedicalMonthly = monthlyMedical + healthMedicalVar;
+
+  // Calculate total expenses excluding health from variable (since it's now in medical)
+  const monthlyVarExcludingHealth = Object.keys(st.monthlyVariable)
+    .filter(key => key !== "health")
+    .reduce((a, key) => a + st.monthlyVariable[key], 0);
+>>>>>>> eb5fa1b0ea88092afdb1ee7f87a84c0fb7ad3e10
 
   const totalExp = monthlyFixed + monthlyVarExcludingHealth + totalMedicalMonthly;
   const surplus = monthlyTH - totalExp - (st.monthlyInvest || 0);

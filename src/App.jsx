@@ -121,6 +121,14 @@ export default function App() {
             <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>最低資産残高</div>
             <div style={{ fontSize: 18, fontWeight: 800, color: "var(--primary)", marginTop: 4 }}>{fmtSmart(simulationResult?.minWealth || 0)}</div>
           </div>
+          <div style={{ background: "var(--bg-card)", padding: 14, borderRadius: 10, border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>予測達成年齢</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: simulationResult.achievedAge ? "var(--text-success)" : "var(--text-warning)", marginTop: 4 }}>{simulationResult.achievedAge ?? "未達"}歳</div>
+          </div>
+          <div style={{ background: "var(--bg-card)", padding: 14, borderRadius: 10, border: "1px solid var(--border)", boxShadow: "var(--shadow-sm)" }}>
+            <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>最低資産残高</div>
+            <div style={{ fontSize: 18, fontWeight: 800, color: "var(--primary)", marginTop: 4 }}>{fmtSmart(simulationResult.minWealth)}</div>
+          </div>
         </div>
       </header>
 
